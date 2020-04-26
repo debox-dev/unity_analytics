@@ -25,6 +25,22 @@
 var NAVTREE =
 [
   [ "DeBox Analytics", "index.html", [
+    [ "Installation instructions", "index.html#autotoc_md1", [
+      [ "Quick Installation", "index.html#autotoc_md2", null ],
+      [ "Explained installation", "index.html#autotoc_md3", null ]
+    ] ],
+    [ "Requirements", "index.html#autotoc_md4", null ],
+    [ "Documentation", "index.html#autotoc_md5", null ],
+    [ "Examples", "index.html#autotoc_md6", [
+      [ "Simple setup with the debug manager", "index.html#autotoc_md7", null ],
+      [ "Set up an auto-flushing analytics manager", "index.html#autotoc_md8", null ],
+      [ "Set up an auto-flushing, locally caching analytics manager", "index.html#autotoc_md9", null ],
+      [ "Grouping analytics managers", "index.html#autotoc_md10", null ],
+      [ "Using the event builder", "index.html#autotoc_md11", [
+        [ "Send event to a specific manager", "index.html#autotoc_md12", null ],
+        [ "Set up a default manager for events", "index.html#autotoc_md13", null ]
+      ] ]
+    ] ],
     [ "Packages", "namespaces.html", [
       [ "Packages", "namespaces.html", "namespaces_dup" ],
       [ "Package Functions", "namespacemembers.html", [

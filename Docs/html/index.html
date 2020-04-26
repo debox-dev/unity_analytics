@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>DeBox Analytics: Main Page</title>
+<title>DeBox Analytics: DeBox Analytics</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -80,11 +80,86 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </iframe>
 </div>
 
-<div class="header">
+<div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">DeBox Analytics Documentation</div>  </div>
+<div class="title"><a class="el" href="namespace_de_box.html">DeBox</a> Analytics </div>  </div>
 </div><!--header-->
 <div class="contents">
+<div class="textblock"><p><a class="anchor" id="md_README"></a> Helpful extensions for the Unity PlayerPrefs sub-system</p>
+<h1><a class="anchor" id="autotoc_md1"></a>
+Installation instructions</h1>
+<h2><a class="anchor" id="autotoc_md2"></a>
+Quick Installation</h2>
+<p>Put this in your <code>Packages/manigest.json</code> file </p><div class="fragment"><div class="line">&quot;com.newtonsoft.json&quot;: &quot;https://github.com/PixelWizards/com.newtonsoft.json.git&quot;,</div>
+<div class="line">&quot;com.debox.playerprefs&quot;: &quot;https://github.com/debox-dev/playerprefs.git&quot;,</div>
+<div class="line">&quot;com.debox.analytics&quot;: &quot;https://github.com/debox-dev/unity_analytics.git&quot;,</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md3"></a>
+Explained installation</h2>
+<ul>
+<li>Open your project manifest file (<code>MyProject/Packages/manifest.json</code>).</li>
+<li>Add NewtonSoft JSON <code>"com.newtonsoft.json": "https://github.com/PixelWizards/com.newtonsoft.json.git"</code></li>
+<li>Add <a class="el" href="namespace_de_box.html">DeBox</a> PlayerPrefs <code>"com.debox.playerprefs": "https://github.com/debox-dev/playerprefs.git"</code></li>
+<li>Add <a class="el" href="namespace_de_box.html">DeBox</a> Analytics <code>"com.debox.analytics": "https://github.com/debox-dev/unity_analytics.git"</code></li>
+<li>Save</li>
+<li>Open or focus on Unity Editor to resolve packages.</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md4"></a>
+Requirements</h1>
+<ul>
+<li>Unity 2019 or higher.</li>
+<li><a class="el" href="namespace_de_box.html">DeBox</a> PlayerPrefs Extensions</li>
+<li>NewtonSoft JSON</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md5"></a>
+Documentation</h1>
+<p><a href="https://debox-dev.github.io/unity_analytics/Docs/html/index.html">Documentation link</a></p>
+<h1><a class="anchor" id="autotoc_md6"></a>
+Examples</h1>
+<h2><a class="anchor" id="autotoc_md7"></a>
+Simple setup with the debug manager</h2>
+<div class="fragment"><div class="line">var myAnalyticsManager = new DebugAnalyticsManager();</div>
+<div class="line">myAnalyticsManager.TrackEvent(&quot;myEvent&quot;);</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md8"></a>
+Set up an auto-flushing analytics manager</h2>
+<div class="fragment"><div class="line">var debugAnalyticsManager = new DebugAnalyticsManager();</div>
+<div class="line">this.analyticsManager = new AutoFlushAnalyticsManager(debugAnalyticsManager, 30); // Flush every 30 seconds </div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md9"></a>
+Set up an auto-flushing, locally caching analytics manager</h2>
+<div class="fragment"><div class="line">var debugAnalyticsManager = new DebugAnalyticsManager();</div>
+<div class="line">var cachedAnalyticsManager = new PlayerPrefsCachedAnalyticsManager(&quot;pprefKey&quot;, debugAnalyticsManager);</div>
+<div class="line">this.analyticsManager = new AutoFlushAnalyticsManager(cachedAnalyticsManager, 30); // Flush every 30 seconds </div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md10"></a>
+Grouping analytics managers</h2>
+<div class="fragment"><div class="line">var myFbAnalyticsManager = new FBAnalyticsManager();</div>
+<div class="line">var myMixPanelAnalyticsManager = new MixPanelAnalyticsManager();</div>
+<div class="line"> </div>
+<div class="line">var mainAnalyticsManager = new AnalyticManagerGroup(myFbAnalyticsManager, myMixPanelAnalyticsManager);</div>
+<div class="line"> </div>
+<div class="line">mainAnalyticsManager.TrackEvent(&quot;myEvent&quot;); // Will track myEvent to both Facebook and MixPanel</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md11"></a>
+Using the event builder</h2>
+<h3><a class="anchor" id="autotoc_md12"></a>
+Send event to a specific manager</h3>
+<div class="fragment"><div class="line">var myAnalyticsManager = new DebugAnalyticsManager();</div>
+<div class="line">myAnalyticsManager.Initialize();</div>
+<div class="line"> </div>
+<div class="line">new AnalyticsEvent(&quot;myEvent&quot;)</div>
+<div class="line">     .Track(&quot;param1&quot;, 1)</div>
+<div class="line">     .Track(&quot;param2&quot;, &quot;Something something dark side&quot;)</div>
+<div class="line">     .Send(myAnalyticsManager);</div>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md13"></a>
+Set up a default manager for events</h3>
+<div class="fragment"><div class="line">var myAnalyticsManager = new DebugAnalyticsManager();</div>
+<div class="line">myAnalyticsManager.Initialize();</div>
+<div class="line"> </div>
+<div class="line">// Now calling Send() on AnalyticsEvent instances will send to this manager. </div>
+<div class="line">AnalyticsEvent.SetDefaultAnalyticsManager(myAnalyticsManager);</div>
+<div class="line"> </div>
+<div class="line">new AnalyticsEvent(&quot;myEvent&quot;)</div>
+<div class="line">     .Track(&quot;param1&quot;, 1)</div>
+<div class="line">     .Track(&quot;param2&quot;, &quot;Something something dark side&quot;)</div>
+<div class="line">     .Send();</div>
+</div><!-- fragment --> </div></div><!-- PageDoc -->
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

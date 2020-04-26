@@ -24,6 +24,9 @@ Put this in your `Packages/manigest.json` file
 - DeBox PlayerPrefs Extensions
 - NewtonSoft JSON
 
+## Documentation
+[Documentation link](https://debox-dev.github.io/unity_analytics/Docs/html/index.html)
+
 ## Examples
 
 ### Simple setup with the debug manager
