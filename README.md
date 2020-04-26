@@ -1,6 +1,6 @@
 # DeBox Analytics
 
-Helpful extensions for the Unity PlayerPrefs sub-system
+Meta Analtic Management system for various platforms
 
 ## Installation instructions
 ### Quick Installation
