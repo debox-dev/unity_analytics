@@ -1,7 +1,9 @@
 {
     "name": "DeBox.Analytics",
     "references": [
-        "DeBox.PlayerPrefsExtensions"
+        "DeBox.PlayerPrefsExtensions",
+        "com.newtonsoft.json",
+        "Mixpanel"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
