@@ -2,9 +2,10 @@
 using System.Linq;
 using System.Collections.Generic;
 
+#if DEBOX_ANALYTICS_MIXPANEL
 using mixpanel;
 
-#if DEBOX_ANALYTICS_MIXPANEL
+
 namespace DeBox.Analytics.MixPanelManager
 {
     /// <summary>
