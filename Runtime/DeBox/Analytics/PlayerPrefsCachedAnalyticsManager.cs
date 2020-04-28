@@ -23,6 +23,7 @@ namespace DeBox.Analytics
     /// </summary>
     public class PlayerPrefsCachedAnalyticsManager : IAnalyticsManager
     {
+        private const string SPECIAL_NAME_ATTR_NAME = "__name__";
         private readonly string _name;
 
         private readonly PlayerPrefsString _incrementDataStore;
@@ -391,11 +392,8 @@ namespace DeBox.Analytics
         
         private void PushEvent(string eventName, Dictionary<string, object> attributes)
         {
-            var eventData = new Dictionary<string, object>
-            {
-                ["name"] = eventName, ["attrs"] = attributes
-            };
-            var eventJson = JsonConvert.SerializeObject(eventData);
+            attributes[SPECIAL_NAME_ATTR_NAME] = eventName;
+            var eventJson = JsonConvert.SerializeObject(attributes);
             _eventQueue.Enqueue(eventJson);
         }
 
@@ -403,8 +401,9 @@ namespace DeBox.Analytics
         {
             var eventJson = _eventQueue.Dequeue();
             var eventData = JsonConvert.DeserializeObject<Dictionary<string, object>>(eventJson);
-            eventName = (string) (eventData["name"]);
-            attributes = eventData["attrs"] as Dictionary<string, object>;
+            eventName = (string) (eventData[SPECIAL_NAME_ATTR_NAME]);
+            eventData.Remove(SPECIAL_NAME_ATTR_NAME);
+            attributes = eventData;
         }
 
         private List<object> GetOrCreateList(Dictionary<string, object> data, string listName)
