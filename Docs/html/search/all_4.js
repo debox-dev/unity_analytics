@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['getcurrenttime_26',['GetCurrentTime',['../class_de_box_1_1_analytics_1_1_base_analytics_manager.html#a7ff3627a3e28b3c55c52b9b444b021a6',1,'DeBox::Analytics::BaseAnalyticsManager']]],
-  ['getsupportedfeatures_27',['GetSupportedFeatures',['../class_de_box_1_1_analytics_1_1_base_analytics_manager.html#a51483712fc39b957344b7870e97e710a',1,'DeBox.Analytics.BaseAnalyticsManager.GetSupportedFeatures()'],['../class_de_box_1_1_analytics_1_1_debug_manager_1_1_debug_analytics_manager.html#aadfdda26bdfa9976c19591188bae2958',1,'DeBox.Analytics.DebugManager.DebugAnalyticsManager.GetSupportedFeatures()'],['../class_de_box_1_1_analytics_1_1_mix_panel_manager_1_1_mix_panel_analytics_manager.html#ab26fdadeb50f9128b477f3f0c27930b8',1,'DeBox.Analytics.MixPanelManager.MixPanelAnalyticsManager.GetSupportedFeatures()']]],
-  ['gettimestampattributename_28',['GetTimestampAttributeName',['../class_de_box_1_1_analytics_1_1_base_analytics_manager.html#a56755fade316feab7f25b2d16f59a696',1,'DeBox.Analytics.BaseAnalyticsManager.GetTimestampAttributeName()'],['../class_de_box_1_1_analytics_1_1_mix_panel_manager_1_1_mix_panel_analytics_manager.html#a280d907af83ffcdf840e2edaed252ce3',1,'DeBox.Analytics.MixPanelManager.MixPanelAnalyticsManager.GetTimestampAttributeName()']]]
+  ['external_20dependency_20manager_20for_20unity_39',['External Dependency Manager for Unity',['../index.html',1,'']]]
 ];

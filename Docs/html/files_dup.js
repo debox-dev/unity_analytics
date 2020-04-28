@@ -1,12 +1,28 @@
 var files_dup =
 [
+    [ "AFInAppEvents.cs", "_a_f_in_app_events_8cs_source.html", null ],
+    [ "AFMiniJSON.cs", "_a_f_mini_j_s_o_n_8cs_source.html", null ],
+    [ "AFUnityUtils.mm", "_a_f_unity_utils_8mm_source.html", null ],
     [ "AnalyticManagerGroup.cs", "_analytic_manager_group_8cs_source.html", null ],
     [ "AnalyticsEvent.cs", "_analytics_event_8cs_source.html", null ],
+    [ "AppsFlyer+AppController.m", "_apps_flyer_09_app_controller_8m_source.html", null ],
+    [ "AppsFlyer.cs", "_apps_flyer_8cs_source.html", null ],
+    [ "AppsFlyerAnalyticsManager.cs", "_apps_flyer_analytics_manager_8cs_source.html", null ],
+    [ "AppsFlyerAndroid.cs", "_apps_flyer_android_8cs_source.html", null ],
+    [ "AppsFlyerAppController.mm", "_apps_flyer_app_controller_8mm_source.html", null ],
+    [ "AppsFlyeriOS.cs", "_apps_flyeri_o_s_8cs_source.html", null ],
+    [ "AppsFlyeriOSWrapper.h", "_apps_flyeri_o_s_wrapper_8h_source.html", null ],
+    [ "AppsFlyeriOSWrapper.mm", "_apps_flyeri_o_s_wrapper_8mm_source.html", null ],
+    [ "AppsFlyerObjectEditor.cs", "_apps_flyer_object_editor_8cs_source.html", null ],
+    [ "AppsFlyerObjectScript.cs", "_apps_flyer_object_script_8cs_source.html", null ],
     [ "AutoFlushAnalyticsManager.cs", "_auto_flush_analytics_manager_8cs_source.html", null ],
     [ "BaseAnalyticsManager.cs", "_base_analytics_manager_8cs_source.html", null ],
     [ "BaseProxyAnalyticsManager.cs", "_base_proxy_analytics_manager_8cs_source.html", null ],
     [ "DebugAnalyticsManager.cs", "_debug_analytics_manager_8cs_source.html", null ],
     [ "IAnalyticsManager.cs", "_i_analytics_manager_8cs_source.html", null ],
+    [ "IAppsFlyerConversionData.cs", "_i_apps_flyer_conversion_data_8cs_source.html", null ],
+    [ "IAppsFlyerUserInvite.cs", "_i_apps_flyer_user_invite_8cs_source.html", null ],
+    [ "IAppsFlyerValidateReceipt.cs", "_i_apps_flyer_validate_receipt_8cs_source.html", null ],
     [ "MixPanelAnalyticsManager.cs", "_mix_panel_analytics_manager_8cs_source.html", null ],
     [ "PlayerPrefsCachedAnalyticsManager.cs", "_player_prefs_cached_analytics_manager_8cs_source.html", null ]
 ];

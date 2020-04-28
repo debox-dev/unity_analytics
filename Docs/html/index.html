@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>DeBox Analytics: DeBox Analytics</title>
+<title>DeBox Analytics: External Dependency Manager for Unity</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -82,84 +82,369 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title"><a class="el" href="namespace_de_box.html">DeBox</a> Analytics </div>  </div>
+<div class="title">External Dependency Manager for Unity </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_README"></a> Meta Analtic Management system for various platforms</p>
-<h1><a class="anchor" id="autotoc_md1"></a>
-Installation instructions</h1>
-<h2><a class="anchor" id="autotoc_md2"></a>
-Quick Installation</h2>
-<p>Put this in your <code>Packages/manigest.json</code> file </p><div class="fragment"><div class="line">&quot;com.newtonsoft.json&quot;: &quot;https://github.com/PixelWizards/com.newtonsoft.json.git&quot;,</div>
-<div class="line">&quot;com.debox.playerprefs&quot;: &quot;https://github.com/debox-dev/playerprefs.git&quot;,</div>
-<div class="line">&quot;com.debox.analytics&quot;: &quot;https://github.com/debox-dev/unity_analytics.git&quot;,</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md3"></a>
-Explained installation</h2>
+<div class="textblock"><p><a class="anchor" id="md_ExternalDependencyManager_Editor_README"></a></p>
+<h1><a class="anchor" id="autotoc_md325"></a>
+Overview</h1>
+<p>The External Dependency Manager for Unity (EDM4U) (formerly Play Services Resolver / Jar Resolver) is intended to be used by any Unity plugin that requires:</p>
 <ul>
-<li>Open your project manifest file (<code>MyProject/Packages/manifest.json</code>).</li>
-<li>Add NewtonSoft JSON <code>"com.newtonsoft.json": "https://github.com/PixelWizards/com.newtonsoft.json.git"</code></li>
-<li>Add <a class="el" href="namespace_de_box.html">DeBox</a> PlayerPrefs <code>"com.debox.playerprefs": "https://github.com/debox-dev/playerprefs.git"</code></li>
-<li>Add <a class="el" href="namespace_de_box.html">DeBox</a> Analytics <code>"com.debox.analytics": "https://github.com/debox-dev/unity_analytics.git"</code></li>
-<li>Save</li>
-<li>Open or focus on Unity Editor to resolve packages.</li>
+<li>Android specific libraries (e.g <a href="https://developer.android.com/studio/projects/android-library.html">AARs</a>).</li>
+<li>iOS <a href="https://cocoapods.org/">CocoaPods</a>.</li>
+<li>Version management of transitive dependencies.</li>
+<li>Management of Unity Package Manager Registries.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md4"></a>
+<p>Updated releases are available on <a href="https://github.com/googlesamples/unity-jar-resolver">GitHub</a></p>
+<h1><a class="anchor" id="autotoc_md326"></a>
+Background</h1>
+<p>Many Unity plugins have dependencies upon Android specific libraries, iOS CocoaPods, and sometimes have transitive dependencies upon other Unity plugins. This causes the following problems:</p>
+<ul>
+<li>Integrating platform specific (e.g Android and iOS) libraries within a Unity project can be complex and a burden on a Unity plugin maintainer.</li>
+<li>The process of resolving conflicting dependencies on platform specific libraries is pushed to the developer attempting to use a Unity plugin. The developer trying to use you plugin is very likely to give up when faced with Android or iOS specific build errors.</li>
+<li>The process of resolving conflicting Unity plugins (due to shared Unity plugin components) is pushed to the developer attempting to use your Unity plugin. In an effort to resolve conflicts, the developer will very likely attempt to resolve problems by deleting random files in your plugin, report bugs when that doesn't work and finally give up.</li>
+</ul>
+<p>EDM provides solutions for each of these problems.</p>
+<h2><a class="anchor" id="autotoc_md327"></a>
+Android Dependency Management</h2>
+<p>The <em>Android Resolver</em> component of this plugin will download and integrate Android library dependencies and handle any conflicts between plugins that share the same dependencies.</p>
+<p>Without the Android Resolver, typically Unity plugins bundle their AAR and JAR dependencies, e.g. a Unity plugin <code>SomePlugin</code> that requires the Google Play Games Android library would redistribute the library and its transitive dependencies in the folder <code>SomePlugin/Android/</code>. When a user imports <code>SomeOtherPlugin</code> that includes the same libraries (potentially at different versions) in <code>SomeOtherPlugin/Android/</code>, the developer using <code>SomePlugin</code> and <code>SomeOtherPlugin</code> will see an error when building for Android that can be hard to interpret.</p>
+<p>Using the Android Resolver to manage Android library dependencies:</p>
+<ul>
+<li>Solves Android library conflicts between plugins.</li>
+<li>Handles all of the various processing steps required to use Android libraries (AARs, JARs) in Unity 4.x and above projects. Almost all versions of Unity have - at best - partial support for AARs.</li>
+<li>(Experimental) Supports minification of included Java components without exporting a project.</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md328"></a>
+iOS Dependency Management</h2>
+<p>The <em>iOS Resolver</em> component of this plugin integrates with <a href="https://cocoapods.org/">CocoaPods</a> to download and integrate iOS libraries and frameworks into the Xcode project Unity generates when building for iOS. Using CocoaPods allows multiple plugins to utilize shared components without forcing developers to fix either duplicate or incompatible versions of libraries included through multiple Unity plugins in their project.</p>
+<h2><a class="anchor" id="autotoc_md329"></a>
+Unity Package Manager Registry Setup</h2>
+<p>The <a href="https://docs.unity3d.com/Manual/Packages.html">Unity Package Manager</a> (UPM) makes use of <a href="https://www.npmjs.com/">NPM</a> registry servers for package hosting and provides ways to discover, install, upgrade and uninstall packages. This makes it easier for developers to manage plugins within their projects.</p>
+<p>However, installing additional package registries requires a few manual steps that can potentially be error prone. The <em>Unity Package Manager Resolver</em> component of this plugin integrates with <a href="https://docs.unity3d.com/Manual/Packages.html">UPM</a> to provide a way to auto-install UPM package registries when a <code>.unitypackage</code> is installed which allows plugin maintainers to ship a <code>.unitypackage</code> that can provide access to their own UPM registry server to make it easier for developers to manage their plugins.</p>
+<h2><a class="anchor" id="autotoc_md330"></a>
+Unity Plugin Version Management</h2>
+<p>Finally, the <em>Version Handler</em> component of this plugin simplifies the process of managing transitive dependencies of Unity plugins and each plugin's upgrade process.</p>
+<p>For example, without the Version Handler plugin, if:</p>
+<ul>
+<li>Unity plugin <code>SomePlugin</code> includes <code>EDM4U</code> plugin at version 1.1.</li>
+<li>Unity plugin <code>SomeOtherPlugin</code> includes <code>EDM4U</code> plugin at version 1.2.</li>
+</ul>
+<p>The version of <code>EDM4U</code> included in the developer's project depends upon the order the developer imports <code>SomePlugin</code> or <code>SomeOtherPlugin</code>.</p>
+<p>This results in:</p>
+<ul>
+<li><code>EDM4U</code> at version 1.2, if <code>SomePlugin</code> is imported then <code>SomeOtherPlugin</code> is imported.</li>
+<li><code>EDM4U</code> at version 1.1, if <code>SomeOtherPlugin</code> is imported then <code>SomePlugin</code> is imported.</li>
+</ul>
+<p>The Version Handler solves the problem of managing transitive dependencies by:</p>
+<ul>
+<li>Specifying a set of packaging requirements that enable a plugin at different versions to be imported into a Unity project.</li>
+<li>Providing activation logic that selects the latest version of a plugin within a project.</li>
+</ul>
+<p>When using the Version Handler to manage <code>EDM4U</code> included in <code>SomePlugin</code> and <code>SomeOtherPlugin</code>, from the prior example, version 1.2 will always be the version activated in a developer's Unity project.</p>
+<p>Plugin creators are encouraged to adopt this library to ease integration for their customers. For more information about integrating EDM4U into your own plugin, see the <a href="#plugin-redistribution">Plugin Redistribution</a> section of this document.</p>
+<h1><a class="anchor" id="autotoc_md331"></a>
 Requirements</h1>
-<ul>
-<li>Unity 2019 or higher.</li>
-<li><a class="el" href="namespace_de_box.html">DeBox</a> PlayerPrefs Extensions</li>
-<li>NewtonSoft JSON</li>
+<p>The <em>Android Resolver</em> and <em>iOS Resolver</em> components of the plugin only work with Unity version 4.6.8 or higher.</p>
+<p>The <em>Version Handler</em> component only works with Unity 5.x or higher as it depends upon the <code>PluginImporter</code> UnityEditor API.</p>
+<p>The <em>Unity Package Manager Resolver</em> component only works with Unity 2018.4 or above, when <a href="https://docs.unity3d.com/Manual/upm-scoped.html">scoped registry</a> support was added to the Unity Package Manager.</p>
+<h1><a class="anchor" id="autotoc_md332"></a>
+Getting Started</h1>
+<p>Before you import EDM4U into your plugin project, you first need to consider whether you intend to <em>redistribute</em> <code>EDM4U</code> along with your own plugin.</p>
+<h2><a class="anchor" id="autotoc_md333"></a>
+Plugin Redistribution</h2>
+<p>If you're a plugin maintainer, redistributing <code>EDM4U</code> inside your own plugin will ease the integration process for your users, by resolving dependency conflicts between your plugin and other plugins in a user's project.</p>
+<p>If you wish to redistribute <code>EDM4U</code> inside your plugin, you <b>must</b> follow these steps when importing the <code>external-dependency-manager-*.unitypackage</code>, and when exporting your own plugin package:</p>
+<ol type="1">
+<li>Import the <code>external-dependency-manager-*.unitypackage</code> into your plugin project by <a href="https://docs.unity3d.com/Manual/CommandLineArguments.html">running Unity from the command line</a>, ensuring that you add the <code>-gvh_disable</code> option.</li>
+</ol>
+<ol type="1">
+<li>Export your plugin by <a href="https://docs.unity3d.com/Manual/CommandLineArguments.html">running Unity from the command line</a>, ensuring that you:<ul>
+<li>Include the contents of the <code>Assets/PlayServicesResolver</code> directory.</li>
+<li>Add the <code>-gvh_disable</code> option.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md5"></a>
-Documentation</h1>
-<p><a href="https://debox-dev.github.io/unity_analytics/Docs/html/index.html">Documentation link</a></p>
-<h1><a class="anchor" id="autotoc_md6"></a>
-Examples</h1>
-<h2><a class="anchor" id="autotoc_md7"></a>
-Simple setup with the debug manager</h2>
-<div class="fragment"><div class="line">var myAnalyticsManager = new DebugAnalyticsManager();</div>
-<div class="line">myAnalyticsManager.TrackEvent(&quot;myEvent&quot;);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md8"></a>
-Set up an auto-flushing analytics manager</h2>
-<div class="fragment"><div class="line">var debugAnalyticsManager = new DebugAnalyticsManager();</div>
-<div class="line">this.analyticsManager = new AutoFlushAnalyticsManager(debugAnalyticsManager, 30); // Flush every 30 seconds </div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md9"></a>
-Set up an auto-flushing, locally caching analytics manager</h2>
-<div class="fragment"><div class="line">var debugAnalyticsManager = new DebugAnalyticsManager();</div>
-<div class="line">var cachedAnalyticsManager = new PlayerPrefsCachedAnalyticsManager(&quot;pprefKey&quot;, debugAnalyticsManager);</div>
-<div class="line">this.analyticsManager = new AutoFlushAnalyticsManager(cachedAnalyticsManager, 30); // Flush every 30 seconds </div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md10"></a>
-Grouping analytics managers</h2>
-<div class="fragment"><div class="line">var myFbAnalyticsManager = new FBAnalyticsManager();</div>
-<div class="line">var myMixPanelAnalyticsManager = new MixPanelAnalyticsManager();</div>
+</li>
+</ol>
+<p>You <b>must</b> specify the <code>-gvh_disable</code> option in order for the Version Handler to work correctly!</p>
+<p>For example, the following command will import the <code>external-dependency-manager-1.2.46.0.unitypackage</code> into the project <code>MyPluginProject</code> and export the entire Assets folder to <code>MyPlugin.unitypackage</code>:</p>
+<div class="fragment"><div class="line">Unity -gvh_disable \</div>
+<div class="line">      -batchmode \</div>
+<div class="line">      -importPackage external-dependency-manager-1.2.46.0.unitypackage \</div>
+<div class="line">      -projectPath MyPluginProject \</div>
+<div class="line">      -exportPackage Assets MyPlugin.unitypackage \</div>
+<div class="line">      -quit</div>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md334"></a>
+Background</h3>
+<p>The <em>Version Handler</em> component relies upon deferring the load of editor DLLs so that it can run first and determine the latest version of a plugin component to activate. The build of <code>EDM4U</code> plugin has Unity asset metadata that is configured so that the editor components are not initially enabled when it's imported into a Unity project. To maintain this configuration when importing the <code>external-dependency-manager.unitypackage</code> into a Unity plugin project, you <em>must</em> specify the command line option <code>-gvh_disable</code> which will prevent the Version Handler component from running and changing the Unity asset metadata.</p>
+<h1><a class="anchor" id="autotoc_md335"></a>
+Android Resolver Usage</h1>
+<p>The Android Resolver copies specified dependencies from local or remote Maven repositories into the Unity project when a user selects Android as the build target in the Unity editor.</p>
+<ol type="1">
+<li>Add the <code>external-dependency-manager-*.unitypackage</code> to your plugin project (assuming you are developing a plugin). If you are redistributing EDM4U with your plugin, you <b>must</b> follow the import steps in the <a href="#getting-started">Getting Started</a> section!</li>
+<li><p class="startli">Copy and rename the <a href="https://github.com/googlesamples/unity-jar-resolver/blob/master/sample/Assets/ExternalDependencyManager/Editor/SampleDependencies.xml">SampleDependencies.xml</a> file into your plugin and add the dependencies your plugin requires.</p>
+<p class="startli">The XML file just needs to be under an <code>Editor</code> directory and match the name <code>*Dependencies.xml</code>. For example, <code>MyPlugin/Editor/MyPluginDependencies.xml</code>.</p>
+</li>
+<li>Follow the steps in the <a href="#getting-started">Getting Started</a> section when you are exporting your plugin package.</li>
+</ol>
+<p>For example, to add the Google Play Games library (<code>com.google.android.gms:play-services-games</code> package) at version <code>9.8.0</code> to the set of a plugin's Android dependencies:</p>
+<div class="fragment"><div class="line">&lt;dependencies&gt;</div>
+<div class="line">  &lt;androidPackages&gt;</div>
+<div class="line">    &lt;androidPackage spec=&quot;com.google.android.gms:play-services-games:9.8.0&quot;&gt;</div>
+<div class="line">      &lt;androidSdkPackageIds&gt;</div>
+<div class="line">        &lt;androidSdkPackageId&gt;extra-google-m2repository&lt;/androidSdkPackageId&gt;</div>
+<div class="line">      &lt;/androidSdkPackageIds&gt;</div>
+<div class="line">    &lt;/androidPackage&gt;</div>
+<div class="line">  &lt;/androidPackages&gt;</div>
+<div class="line">&lt;/dependencies&gt;</div>
+</div><!-- fragment --><p>The version specification (last component) supports:</p>
+<ul>
+<li>Specific versions e.g <code>9.8.0</code></li>
+<li>Partial matches e.g <code>9.8.+</code> would match 9.8.0, 9.8.1 etc. choosing the most recent version.</li>
+<li>Latest version using <code>LATEST</code> or <code>+</code>. We do <em>not</em> recommend using this unless you're 100% sure the library you depend upon will not break your Unity plugin in future.</li>
+</ul>
+<p>The above example specifies the dependency as a component of the Android SDK manager such that the Android SDK manager will be executed to install the package if it's not found. If your Android dependency is located on Maven central it's possible to specify the package simply using the <code>androidPackage</code> element:</p>
+<div class="fragment"><div class="line">&lt;dependencies&gt;</div>
+<div class="line">  &lt;androidPackages&gt;</div>
+<div class="line">    &lt;androidPackage spec=&quot;com.google.api-client:google-api-client-android:1.22.0&quot; /&gt;</div>
+<div class="line">  &lt;/androidPackages&gt;</div>
+<div class="line">&lt;/dependencies&gt;</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md336"></a>
+Auto-resolution</h2>
+<p>By default the Android Resolver automatically monitors the dependencies you have specified and the <code>Plugins/Android</code> folder of your Unity project. The resolution process runs when the specified dependencies are not present in your project.</p>
+<p>The <em>auto-resolution</em> process can be disabled via the <code>Assets &gt; External Dependency Manager &gt; Android Resolver &gt; Settings</code> menu.</p>
+<p>Manual resolution can be performed using the following menu options:</p>
+<ul>
+<li><code>Assets &gt; External Dependency Manager &gt; Android Resolver &gt; Resolve</code></li>
+<li><code>Assets &gt; External Dependency Manager &gt; Android Resolver &gt; Force Resolve</code></li>
+</ul>
+<h2><a class="anchor" id="autotoc_md337"></a>
+Deleting libraries</h2>
+<p>Resolved packages are tracked via asset labels by the Android Resolver. They can easily be deleted using the <code>Assets &gt; External Dependency Manager &gt; Android Resolver &gt; Delete Resolved Libraries</code> menu item.</p>
+<h2><a class="anchor" id="autotoc_md338"></a>
+Android Manifest Variable Processing</h2>
+<p>Some AAR files (for example play-services-measurement) contain variables that are processed by the Android Gradle plugin. Unfortunately, Unity does not perform the same processing when using Unity's Internal Build System, so the Android Resolver plugin handles known cases of this variable substitution by exploding the AAR into a folder and replacing <code>${applicationId}</code> with the <code>bundleID</code>.</p>
+<p>Disabling AAR explosion and therefore Android manifest processing can be done via the <code>Assets &gt; External Dependency Manager &gt; Android Resolver &gt; Settings</code> menu. You may want to disable explosion of AARs if you're exporting a project to be built with Gradle / Android Studio.</p>
+<h2><a class="anchor" id="autotoc_md339"></a>
+ABI Stripping</h2>
+<p>Some AAR files contain native libraries (.so files) for each ABI supported by Android. Unfortunately, when targeting a single ABI (e.g x86), Unity does not strip native libraries for unused ABIs. To strip unused ABIs, the Android Resolver plugin explodes an AAR into a folder and removes unused ABIs to reduce the built APK size. Furthermore, if native libraries are not stripped from an APK (e.g you have a mix of Unity's x86 library and some armeabi-v7a libraries) Android may attempt to load the wrong library for the current runtime ABI completely breaking your plugin when targeting some architectures.</p>
+<p>AAR explosion and therefore ABI stripping can be disabled via the <code>Assets &gt; External Dependency Manager &gt; Android Resolver &gt; Settings</code> menu. You may want to disable explosion of AARs if you're exporting a project to be built with Gradle / Android Studio.</p>
+<h2><a class="anchor" id="autotoc_md340"></a>
+Resolution Strategies</h2>
+<p>By default the Android Resolver will use Gradle to download dependencies prior to integrating them into a Unity project. This works with Unity's internal build system and Gradle / Android Studio project export.</p>
+<p>It's possible to change the resolution strategy via the <code>Assets &gt; External Dependency Manager &gt; Android Resolver &gt; Settings</code> menu.</p>
+<h3><a class="anchor" id="autotoc_md341"></a>
+Download Artifacts with Gradle</h3>
+<p>Using the default resolution strategy, the Android resolver executes the following operations:</p>
+<ul>
+<li>Remove the result of previous Android resolutions. e.g Delete all files and directories labeled with "gpsr" under <code>Plugins/Android</code> from the project.</li>
+<li>Collect the set of Android dependencies (libraries) specified by a project's <code>*Dependencies.xml</code> files.</li>
+<li>Run <code>download_artifacts.gradle</code> with Gradle to resolve conflicts and, if successful, download the set of resolved Android libraries (AARs, JARs).</li>
+<li>Process each AAR / JAR so that it can be used with the currently selected Unity build system (e.g Internal vs. Gradle, Export vs. No Export). This involves patching each reference to <code>applicationId</code> in the AndroidManifest.xml with the project's bundle ID. This means resolution must be run if the bundle ID is changed again.</li>
+<li>Move the processed AARs to <code>Plugins/Android</code> so they will be included when Unity invokes the Android build.</li>
+</ul>
+<h3><a class="anchor" id="autotoc_md342"></a>
+Integrate into mainTemplate.gradle</h3>
+<p>Unity 5.6 introduced support for customizing the <code>build.gradle</code> used to build Unity projects with Gradle. When the <em>Patch mainTemplate.gradle</em> setting is enabled, rather than downloading artifacts before the build, Android resolution results in the execution of the following operations:</p>
+<ul>
+<li>Remove the result of previous Android resolutions. e.g Delete all files and directories labeled with "gpsr" under <code>Plugins/Android</code> from the project and remove sections delimited with <code>// Android Resolver * Start</code> and <code>// Android Resolver * End</code> lines.</li>
+<li>Collect the set of Android dependencies (libraries) specified by a project's <code>*Dependencies.xml</code> files.</li>
+<li>Rename any <code>.srcaar</code> files in the build to <code>.aar</code> and exclude them from being included directly by Unity in the Android build as <code>mainTemplate.gradle</code> will be patched to include them instead from their local maven repositories.</li>
+<li>Inject the required Gradle repositories into <code>mainTemplate.gradle</code> at the line matching the pattern &lsquo;.*apply plugin: 'com.android.(application|library)&rsquo;.*<code>or the section starting at the line</code>// Android Resolver Repos Start`. If you want to control the injection point in the file, the section delimited by the lines <code>// Android Resolver Repos Start</code> and <code>// Android Resolver Repos End</code> should be placed in the global scope before the <code>dependencies</code> section.</li>
+<li>Inject the required Android dependencies (libraries) into <code>mainTemplate.gradle</code> at the line matching the pattern <code>***DEPS***</code> or the section starting at the line <code>// Android Resolver Dependencies Start</code>. If you want to control the injection point in the file, the section delimited by the lines <code>// Android Resolver Dependencies Start</code> and <code>// Android Resolver Dependencies End</code> should be placed in the <code>dependencies</code> section.</li>
+<li>Inject the packaging options logic, which excludes architecture specific libraries based upon the selected build target, into <code>mainTemplate.gradle</code> at the line matching the pattern <code>android +{</code> or the section starting at the line <code>// Android Resolver Exclusions Start</code>. If you want to control the injection point in the file, the section delimited by the lines <code>// Android Resolver Exclusions Start</code> and <code>// Android Resolver Exclusions End</code> should be placed in the global scope before the <code>android</code> section.</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md343"></a>
+Dependency Tracking</h2>
+<p>The Android Resolver creates the <code>ProjectSettings/AndroidResolverDependencies.xml</code> to quickly determine the set of resolved dependencies in a project. This is used by the auto-resolution process to only run the expensive resolution process when necessary.</p>
+<h2><a class="anchor" id="autotoc_md344"></a>
+Displaying Dependencies</h2>
+<p>It's possible to display the set of dependencies the Android Resolver would download and process in your project via the <code>Assets &gt; External Dependency Manager &gt; Android Resolver &gt; Display Libraries</code> menu item.</p>
+<h1><a class="anchor" id="autotoc_md345"></a>
+iOS Resolver Usage</h1>
+<p>The iOS resolver component of this plugin manages <a href="https://cocoapods.org/">CocoaPods</a>. A CocoaPods <code>Podfile</code> is generated and the <code>pod</code> tool is executed as a post build process step to add dependencies to the Xcode project exported by Unity.</p>
+<p>Dependencies for iOS are added by referring to CocoaPods.</p>
+<ol type="1">
+<li>Add the <code>external-dependency-manager-*.unitypackage</code> to your plugin project (assuming you are developing a plugin). If you are redistributing EDM4U with your plugin, you <b>must</b> follow the import steps in the <a href="#getting-started">Getting Started</a> section!</li>
+<li><p class="startli">Copy and rename the <a href="https://github.com/googlesamples/unity-jar-resolver/blob/master/sample/Assets/ExternalDependencyManager/Editor/SampleDependencies.xml">SampleDependencies.xml</a> file into your plugin and add the dependencies your plugin requires.</p>
+<p class="startli">The XML file just needs to be under an <code>Editor</code> directory and match the name <code>*Dependencies.xml</code>. For example, <code>MyPlugin/Editor/MyPluginDependencies.xml</code>.</p>
+</li>
+<li>Follow the steps in the <a href="#getting-started">Getting Started</a> section when you are exporting your plugin package.</li>
+</ol>
+<p>For example, to add the AdMob pod, version 7.0 or greater with bitcode enabled:</p>
+<div class="fragment"><div class="line">&lt;dependencies&gt;</div>
+<div class="line">  &lt;iosPods&gt;</div>
+<div class="line">    &lt;iosPod name=&quot;Google-Mobile-Ads-SDK&quot; version=&quot;~&gt; 7.0&quot; bitcodeEnabled=&quot;true&quot;</div>
+<div class="line">            minTargetSdk=&quot;6.0&quot; /&gt;</div>
+<div class="line">  &lt;/iosPods&gt;</div>
+<div class="line">&lt;/dependencies&gt;</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md346"></a>
+Integration Strategies</h2>
+<p>The <code>CocoaPods</code> are either:</p><ul>
+<li>Downloaded and injected into the Xcode project file directly, rather than creating a separate xcworkspace. We call this <code>Xcode project</code> integration.</li>
+<li>If the Unity version supports opening a xcworkspace file, the <code>pod</code> tool is used as intended to generate a xcworkspace which references the CocoaPods. We call this <code>Xcode workspace</code> integration.</li>
+</ul>
+<p>The resolution strategy can be changed via the <code>Assets &gt; External Dependency Manager &gt; iOS Resolver &gt; Settings</code> menu.</p>
+<h3><a class="anchor" id="autotoc_md347"></a>
+Appending text to generated Podfile</h3>
+<p>In order to modify the generated Podfile you can create a script like this: </p><div class="fragment"><div class="line">using System.IO;</div>
+<div class="line">public class PostProcessIOS : MonoBehaviour {</div>
+<div class="line">[PostProcessBuildAttribute(45)]//must be between 40 and 50 to ensure that it&#39;s not overriden by Podfile generation (40) and that it&#39;s added before &quot;pod install&quot; (50)</div>
+<div class="line">private static void PostProcessBuild_iOS(BuildTarget target, string buildPath)</div>
+<div class="line">{</div>
+<div class="line">    if (target == BuildTarget.iOS)</div>
+<div class="line">    {</div>
 <div class="line"> </div>
-<div class="line">var mainAnalyticsManager = new AnalyticManagerGroup(myFbAnalyticsManager, myMixPanelAnalyticsManager);</div>
-<div class="line"> </div>
-<div class="line">mainAnalyticsManager.TrackEvent(&quot;myEvent&quot;); // Will track myEvent to both Facebook and MixPanel</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md11"></a>
-Using the event builder</h2>
-<h3><a class="anchor" id="autotoc_md12"></a>
-Send event to a specific manager</h3>
-<div class="fragment"><div class="line">var myAnalyticsManager = new DebugAnalyticsManager();</div>
-<div class="line">myAnalyticsManager.Initialize();</div>
-<div class="line"> </div>
-<div class="line">new AnalyticsEvent(&quot;myEvent&quot;)</div>
-<div class="line">     .Track(&quot;param1&quot;, 1)</div>
-<div class="line">     .Track(&quot;param2&quot;, &quot;Something something dark side&quot;)</div>
-<div class="line">     .Send(myAnalyticsManager);</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md13"></a>
-Set up a default manager for events</h3>
-<div class="fragment"><div class="line">var myAnalyticsManager = new DebugAnalyticsManager();</div>
-<div class="line">myAnalyticsManager.Initialize();</div>
-<div class="line"> </div>
-<div class="line">// Now calling Send() on AnalyticsEvent instances will send to this manager. </div>
-<div class="line">AnalyticsEvent.SetDefaultAnalyticsManager(myAnalyticsManager);</div>
-<div class="line"> </div>
-<div class="line">new AnalyticsEvent(&quot;myEvent&quot;)</div>
-<div class="line">     .Track(&quot;param1&quot;, 1)</div>
-<div class="line">     .Track(&quot;param2&quot;, &quot;Something something dark side&quot;)</div>
-<div class="line">     .Send();</div>
-</div><!-- fragment --> </div></div><!-- PageDoc -->
+<div class="line">        using (StreamWriter sw = File.AppendText(buildPath + &quot;/Podfile&quot;))</div>
+<div class="line">        {</div>
+<div class="line">            //in this example I&#39;m adding an app extension</div>
+<div class="line">            sw.WriteLine(&quot;\ntarget &#39;NSExtension&#39; do\n  pod &#39;Firebase/Messaging&#39;, &#39;6.6.0&#39;\nend&quot;);</div>
+<div class="line">        }</div>
+<div class="line">    }</div>
+<div class="line">}</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md348"></a>
+Unity Package Manager Resolver Usage</h1>
+<p>Adding registries to the <a href="https://docs.unity3d.com/Manual/Packages.html">Unity Package Manager</a> (UPM) is a manual process. The Unity Package Manager Resolver (UPMR) component of this plugin makes it easy for plugin maintainers to distribute new UPM registry servers and easy for plugin users to manage UPM registry servers.</p>
+<h2><a class="anchor" id="autotoc_md349"></a>
+Adding Registries</h2>
+<ol type="1">
+<li>Add the <code>external-dependency-manager-*.unitypackage</code> to your plugin project (assuming you are developing a plugin). If you are redistributing EDM4U with your plugin, you <b>must</b> follow the import steps in the <a href="#getting-started">Getting Started</a> section!</li>
+<li><p class="startli">Copy and rename the <a href="https://github.com/googlesamples/unity-jar-resolver/blob/master/sample/Assets/ExternalDependencyManager/Editor/sample/Assets/ExternalDependencyManager/Editor/SampleRegistries.xml">SampleRegistries.xml</a> file into your plugin and add the registries your plugin requires.</p>
+<p class="startli">The XML file just needs to be under an <code>Editor</code> directory and match the name <code>*Registries.xml</code> or labeled with <code>gumpr_registries</code>. For example, <code>MyPlugin/Editor/MyPluginRegistries.xml</code>.</p>
+</li>
+<li>Follow the steps in the <a href="#getting-started">Getting Started</a> section when you are exporting your plugin package.</li>
+</ol>
+<p>For example, to add a registry for plugins in the scope <code>com.coolstuff</code>:</p>
+<div class="fragment"><div class="line">&lt;registries&gt;</div>
+<div class="line">  &lt;registry name=&quot;Cool Stuff&quot;</div>
+<div class="line">            url=&quot;https://unityregistry.coolstuff.com&quot;</div>
+<div class="line">            termsOfService=&quot;https://coolstuff.com/unityregistry/terms&quot;</div>
+<div class="line">            privacyPolicy=&quot;https://coolstuff.com/unityregistry/privacy&quot;&gt;</div>
+<div class="line">    &lt;scopes&gt;</div>
+<div class="line">      &lt;scope&gt;com.coolstuff&lt;/scope&gt;</div>
+<div class="line">    &lt;/scopes&gt;</div>
+<div class="line">  &lt;/registry&gt;</div>
+<div class="line">&lt;/registries&gt;</div>
+</div><!-- fragment --><p>When UPMR is loaded it will prompt the developer to add the registry to their project if it isn't already present in the <code>Packages/manifest.json</code> file.</p>
+<p>For more information, see Unity's documentation on <a href="https://docs.unity3d.com/Manual/upm-scoped.html">scoped package registries</a>.</p>
+<h2><a class="anchor" id="autotoc_md350"></a>
+Managing Registries</h2>
+<p>It's possible to add and remove registries that are specified via UPMR XML configuration files via the following menu options:</p>
+<ul>
+<li><code>Assets &gt; External Dependency Manager &gt; Unity Package Manager Resolver &gt; Add Registries</code> will prompt the user with a window which allows them to add registries discovered in the project to the Unity Package Manager.</li>
+<li><code>Assets &gt; External Dependency Manager &gt; Unity Package Manager Resolver &gt; Remove Registries</code> will prompt the user with a window which allows them to remove registries discovered in the project from the Unity Package Manager.</li>
+<li><code>Assets &gt; External Dependency Manager &gt; Unity Package Manager Resolver &gt; Modify Registries</code> will prompt the user with a window which allows them to add or remove registries discovered in the project.</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md351"></a>
+Configuration</h2>
+<p>UPMR can be configured via the <code>Assets &gt; External Dependency Manager &gt; Unity Package Manager Resolver &gt; Settings</code> menu option:</p>
+<ul>
+<li><code>Add package registries</code> when enabled, when the plugin loads or registry configuration files change, this will prompt the user to add registries that are not present in the Unity Package Manager.</li>
+<li><code>Prompt to add package registries</code> will cause a developer to be prompted with a window that will ask for confirmation before adding registries. When this is disabled registries are added silently to the project.</li>
+<li><code>Enable Analytics Reporting</code> when enabled, reports the use of the plugin to the developers so they can make imrpovements.</li>
+<li><code>Verbose logging</code> when enabled prints debug information to the console which can be useful when filing bug reports.</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md352"></a>
+Version Handler Usage</h1>
+<p>The Version Handler component of this plugin manages:</p>
+<ul>
+<li>Shared Unity plugin dependencies.</li>
+<li>Upgrading Unity plugins by cleaning up old files from previous versions.</li>
+<li>Uninstallation of plugins that are distributed with manifest files.</li>
+<li>Restoration of plugin assets to their original install locations if assets are tagged with the <code>exportpath</code> label.</li>
+</ul>
+<p>Since the Version Handler needs to modify Unity asset metadata (<code>.meta</code> files), to enable / disable components, rename and delete asset files it does not work with Unity Package Manager installed packages. It's still possible to include EDM4U in Unity Package Manager packages, the Version Handler component simply won't do anything to UPM plugins in this case.</p>
+<h2><a class="anchor" id="autotoc_md353"></a>
+Using Version Handler Managed Plugins</h2>
+<p>If a plugin is imported at multiple different versions into a project, if the Version Handler is enabled, it will automatically check all managed assets to determine the set of assets that are out of date and assets that should be removed. To disable automatic checking managed assets disable the <code>Enable version management</code> option in the <code>Assets &gt; External Dependency Manager &gt; Version Handler &gt; Settings</code> menu.</p>
+<p>If version management is disabled, it's possible to check managed assets manually using the <code>Assets &gt; External Dependency Manager &gt; Version Handler &gt; Update</code> menu option.</p>
+<h3><a class="anchor" id="autotoc_md354"></a>
+Listing Managed Plugins</h3>
+<p>Plugins managed by the Version Handler, those that ship with manifest files, can displayed using the <code>Assets &gt; External Dependency Manager &gt; Version Handler &gt; Display Managed Packages</code> menu option. The list of plugins are written to the console window along with the set of files used by each plugin.</p>
+<h3><a class="anchor" id="autotoc_md355"></a>
+Uninstalling Managed Plugins</h3>
+<p>Plugins managed by the Version Handler, those that ship with manifest files, can be removed using the <code>Assets &gt; External Dependency Manager &gt; Version Handler &gt; Uninstall Managed Packages</code> menu option. This operation will display a window that allows a developer to select a set of plugins to remove which will remove all files owned by each plugin excluding those that are in use by other installed plugins.</p>
+<p>Files managed by the Version Handler, those labeled with the <code>gvh</code> asset label, can be checked to see whether anything needs to be upgraded, disabled or removed using the <code>Assets &gt; External Dependency Manager &gt; Version Handler &gt; Update</code> menu option.</p>
+<h3><a class="anchor" id="autotoc_md356"></a>
+Restore Install Paths</h3>
+<p>Some developers move assets around in their project which can make it harder for plugin maintainers to debug issues if this breaks Unity's <a href="https://docs.unity3d.com/Manual/SpecialFolders.html">special folders</a> rules. If assets are labeled with their original install / export path (see <code>gvhp_exportpath</code> below), Version Handler can restore assets to their original locations when using the <code>Assets &gt; External Dependency Manager &gt; Version Handler &gt; Move Files To Install Locations</code> menu option.</p>
+<h3><a class="anchor" id="autotoc_md357"></a>
+Settings</h3>
+<p>Some behavior of the Version Handler can be configured via the <code>Assets &gt; External Dependency Manager &gt; Version Handler &gt; Settings</code> menu option.</p>
+<ul>
+<li><code>Enable version management</code> controls whether the plugin should automatically check asset versions and apply changes. If this is disabled the process should be run manually when installing or upgrading managed plugins using <code>Assets &gt; External Dependency Manager &gt; Version Handler &gt; Update</code>.</li>
+<li><code>Rename to canonical filenames</code> is a legacy option that will rename files to remove version numbers and other labels from filenames.</li>
+<li><code>Prompt for obsolete file deletion</code> enables the display of a window when obsolete files are deleted allowing the developer to select which files to delete and those to keep.</li>
+<li><code>Allow disabling files via renaming</code> controls whether obsolete or disabled files should be disabled by renaming them to <code>myfilename_DISABLED</code>. Renaming to disable files is required in some scenarios where Unity doesn't support removing files from the build via the PluginImporter.</li>
+<li><code>Enable Analytics Reporting</code> enables / disables usage reporting to plugin developers to improve the product.</li>
+<li><code>Verbose logging</code> enables <em>very</em> noisy log output that is useful for debugging while filing a bug report or building a new managed plugin.</li>
+<li><code>Use project settings</code> saves settings for the plugin in the project rather than system-wide.</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md358"></a>
+Redistributing a Managed Plugin</h2>
+<p>The Version Handler employs a couple of methods for managing version selection, upgrade and removal of plugins.</p>
+<ul>
+<li>Each plugin can ship with a manifest file that lists the files it includes. This makes it possible for Version Handler to calculate the difference in assets between the most recent release of a plugin and the previous release installed in a project. If a files are removed the Version Handler will prompt the user to clean up obsolete files.</li>
+<li>Plugins can ship using assets with unique names, unique GUIDs and version number labels. Version numbers can be attached to assets using labels or added to the filename (e.g <code>myfile.txt</code> would be `myfile_version-x.y.z.txt). This allows the Version Handler to determine which set of files are the same file at different versions, select the most recent version and prompt the developer to clean up old versions.</li>
+</ul>
+<p>Unity plugins can be managed by the Version Handler using the following steps:</p>
+<ol type="1">
+<li>Add the <code>gvh</code> asset label to each asset (file) you want Version Handler to manage.</li>
+</ol>
+<ol type="1">
+<li>Add the <code>gvh_version-VERSION</code> label to each asset where <code>VERSION</code> is the version of the plugin you're releasing (e.g 1.2.3).</li>
+</ol>
+<ol type="1">
+<li>Add the <code>gvhp_exportpath-PATH</code> label to each asset where <code>PATH</code> is the export path of the file when the <code>.unitypackage</code> is created. This is used to track files if they're moved around in a project by developers.</li>
+</ol>
+<ol type="1">
+<li>Optional: Add <code>gvh_targets-editor</code> label to each editor DLL in your plugin and disable <code>editor</code> as a target platform for the DLL. The Version Handler will enable the most recent version of this DLL when the plugin is imported.</li>
+</ol>
+<ol type="1">
+<li>Optional: If your plugin is included in other Unity plugins, you should add the version number to each filename and change the GUID of each asset. This allows multiple versions of your plugin to be imported into a Unity project, with the Version Handler component activating only the most recent version.</li>
+</ol>
+<ol type="1">
+<li>Create a manifest text file named <code>MY_UNIQUE_PLUGIN_NAME_VERSION.txt</code> that lists all the files in your plugin relative to the project root. Then add the <code>gvh_manifest</code> label to the asset to indicate this file is a plugin manifest.</li>
+</ol>
+<ol type="1">
+<li>Optional: Add a <code>gvhp_manifestname-NAME</code> label to your manifest file to provide a human readable name for your package. If this isn't provided the name of the manifest file will be used as the package name. NAME can match the pattern &lsquo;[0-9]+[a-zA-Z -]&rsquo; where a leading integer will set the priority of the name where <code>0</code> is the highest priority and preferably used as the display name. The lowest value (i.e highest priority name) will be used as the display name and all other specified names will be aliases of the display name. Aliases can refer to previous names of the package allowing renaming across published versions.</li>
+</ol>
+<ol type="1">
+<li>Redistribute EDM4U Unity plugin with your plugin. See the <a href="#plugin-redistribution">Plugin Redistribution</a> for the details.</li>
+</ol>
+<p>If you follow these steps:</p>
+<ul>
+<li>When users import a newer version of your plugin, files referenced by the older version's manifest are cleaned up.</li>
+<li>The latest version of the plugin will be selected when users import multiple packages that include your plugin, assuming the steps in <a href="#plugin-redistribution">Plugin Redistribution</a> are followed.</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md359"></a>
+Building from Source</h1>
+<p>To build this plugin from source you need the following tools installed:</p><ul>
+<li>Unity (with iOS and Android modules installed)</li>
+</ul>
+<p>You can build the plugin by running the following from your shell (Linux / OSX):</p>
+<div class="fragment"><div class="line">./gradlew build</div>
+</div><!-- fragment --><p>or Windows:</p>
+<div class="fragment"><div class="line">./gradlew.bat build</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md360"></a>
+Releasing</h1>
+<p>Each time a new build of this plugin is checked into the source tree you need to do the following:</p>
+<ul>
+<li>Bump the plugin version variable <code>pluginVersion</code> in <code>build.gradle</code></li>
+<li>Update <code>CHANGELOG.md</code> with the new version number and changes included in the release.</li>
+<li>Build the release using <code>./gradle release</code> which performs the following:<ul>
+<li>Updates <code>external-dependency-manager-*.unitypackage</code></li>
+<li>Copies the unpacked plugin to the <code>exploded</code> directory.</li>
+<li>Updates template metadata files in the <code>plugin</code> directory. The GUIDs of all asset metadata is modified due to the version number change. Each file within the plugin is versioned to allow multiple versions of the plugin to be imported into a Unity project which allows the most recent version to be activated by the Version Handler component.</li>
+</ul>
+</li>
+<li>Create the release commit and tag the release using <code>./gradle gitTagRelease</code> which performs the following:<ul>
+<li><code>git add -A</code> to pick up all modified, new and deleted files in the tree.</li>
+<li><code>git commit --amend -a</code> to create a release commit with the release notes in the change log.</li>
+<li><code>git tag -a RELEASE -m "version RELEASE"</code> to tag the release. </li>
+</ul>
+</li>
+</ul>
+</div></div><!-- PageDoc -->
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

@@ -1,5 +1,6 @@
 var namespace_de_box_1_1_analytics =
 [
+    [ "AppsFlyerManager", "namespace_de_box_1_1_analytics_1_1_apps_flyer_manager.html", "namespace_de_box_1_1_analytics_1_1_apps_flyer_manager" ],
     [ "DebugManager", "namespace_de_box_1_1_analytics_1_1_debug_manager.html", "namespace_de_box_1_1_analytics_1_1_debug_manager" ],
     [ "MixPanelManager", "namespace_de_box_1_1_analytics_1_1_mix_panel_manager.html", "namespace_de_box_1_1_analytics_1_1_mix_panel_manager" ],
     [ "AnalyticManagerGroup", "class_de_box_1_1_analytics_1_1_analytic_manager_group.html", "class_de_box_1_1_analytics_1_1_analytic_manager_group" ],

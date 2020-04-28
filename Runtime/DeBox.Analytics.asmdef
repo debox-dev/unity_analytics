@@ -3,7 +3,8 @@
     "references": [
         "DeBox.PlayerPrefsExtensions",
         "com.newtonsoft.json",
-        "Mixpanel"
+        "Mixpanel",
+        "AppsFlyerSDK"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['name_102',['Name',['../class_de_box_1_1_analytics_1_1_base_analytics_event.html#a0e08587c7519904606231e2928eb07a7',1,'DeBox::Analytics::BaseAnalyticsEvent']]]
+  ['level_202',['LEVEL',['../class_a_f_in_app_events.html#a5bd860bcc4287bc01fb09ad943bbe00d',1,'AFInAppEvents']]],
+  ['level_5fachieved_203',['LEVEL_ACHIEVED',['../class_a_f_in_app_events.html#ae8e358ece4699d6a1b2f82b048334cd7',1,'AFInAppEvents']]]
 ];

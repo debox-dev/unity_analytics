@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['debuganalyticsmanager_77',['DebugAnalyticsManager',['../class_de_box_1_1_analytics_1_1_debug_manager_1_1_debug_analytics_manager.html#ae3fbbbba6fe383e4ada99d20a719a504',1,'DeBox::Analytics::DebugManager::DebugAnalyticsManager']]]
+  ['callbackstringtodictionary_146',['CallbackStringToDictionary',['../class_apps_flyer_s_d_k_1_1_apps_flyer.html#a635d9fbb48e279eab0b6e1aa253f5222',1,'AppsFlyerSDK::AppsFlyer']]]
 ];

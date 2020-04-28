@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['playerprefscachedanalyticsmanager_87',['PlayerPrefsCachedAnalyticsManager',['../class_de_box_1_1_analytics_1_1_player_prefs_cached_analytics_manager.html#a375b1485749024879e2f655f0e5289f1',1,'DeBox::Analytics::PlayerPrefsCachedAnalyticsManager']]]
+  ['mixpanelanalyticsmanager_164',['MixPanelAnalyticsManager',['../class_de_box_1_1_analytics_1_1_mix_panel_manager_1_1_mix_panel_analytics_manager.html#a5e432857f07203d8c3faec192519ed37',1,'DeBox::Analytics::MixPanelManager::MixPanelAnalyticsManager']]]
 ];
