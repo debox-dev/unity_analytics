@@ -4,20 +4,13 @@ Meta Analtic Management system for various platforms
 
 ## Installation instructions
 ### Quick Installation
-Put this in your `Packages/manigest.json` file
+1. Install Json .net from the Asset Store
+
+2. Put this in your `Packages/manigest.json` file
 ```
-"com.newtonsoft.json": "https://github.com/PixelWizards/com.newtonsoft.json.git",
 "com.debox.playerprefs": "https://github.com/debox-dev/playerprefs.git",
 "com.debox.analytics": "https://github.com/debox-dev/unity_analytics.git",
 ```
-
-### Explained installation
-- Open your project manifest file (`MyProject/Packages/manifest.json`).
-- Add NewtonSoft JSON ```"com.newtonsoft.json": "https://github.com/PixelWizards/com.newtonsoft.json.git"```
-- Add DeBox PlayerPrefs ```"com.debox.playerprefs": "https://github.com/debox-dev/playerprefs.git"``` 
-- Add DeBox Analytics ```"com.debox.analytics": "https://github.com/debox-dev/unity_analytics.git"``` 
-- Save
-- Open or focus on Unity Editor to resolve packages.
 
 ## Requirements
 - Unity 2019 or higher.
