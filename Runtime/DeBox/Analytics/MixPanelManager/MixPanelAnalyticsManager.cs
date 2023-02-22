@@ -209,15 +209,15 @@ namespace DeBox.Analytics.MixPanelManager
             {
                 return dt.ToString("yyyy-dd-MM") + "T" + dt.ToString("HH:mm:ss");
             }
-			if (obj is IList)
-			{
-				var valueList = new List<Value>();
-				IList myList = (IList)obj;
-				for (var i = 0; i < (myList).Count; i++){
-					valueList.Add(ObjectToValue(myList[i]));
-				}
+            if (obj is IList)
+            {
+                var valueList = new List<Value>();
+                IList myList = (IList)obj;
+                for (var i = 0; i < (myList).Count; i++){
+                    valueList.Add(ObjectToValue(myList[i]));
+                }
                 return new Value(valueList);
-			}            
+            }            
             
             switch (obj)
             {
