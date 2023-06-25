@@ -9,73 +9,73 @@ namespace DeBox.Analytics
     [Flags]
     public enum AnalyticsFeatureType
     {
-        None,
+        None = 0,
         
         /// <summary>
         /// Account tracking feature 
         /// </summary>
-        AccountTracking,
+        AccountTracking = 1,
         
         /// <summary>
         /// Increment the numeric value of an attribute of the tracked account
         /// </summary>
-        AccountIncrement,
+        AccountIncrement = 2,
         
         /// <summary>
         /// Set the value of an attribute of the tracked account
         /// </summary>
-        AccountSet,
+        AccountSet = 4,
         
         /// <summary>
         /// Set the value of an attribute of the tracked account, only if not yet set
         /// </summary>
-        AccountSetOnce,
+        AccountSetOnce = 8,
         
         /// <summary>
         /// Add values to a list attribute of the tracked account
         /// </summary>
-        AccountAddToList,
+        AccountAddToList = 16,
         
         /// <summary>
         /// Add unique values to a list attribute of the tracked account
         /// </summary>
-        AccountUnionList,
+        AccountUnionList = 32,
         
         /// <summary>
         /// Keep only intersecting values in a list attribute of the tracked account
         /// </summary>
-        AccountIntersectList,
+        AccountIntersectList = 64,
         
         /// <summary>
         /// Remove values from a list attribute of the tracked account
         /// </summary>
-        AccountRemoveFromList,
+        AccountRemoveFromList = 128,
         
         /// <summary>
         /// Send a tracking event with only a name
         /// </summary>
-        NamedEvents,
+        NamedEvents = 256,
         
         /// <summary>
         /// Send a tracking event with named attributes
         /// </summary>
-        NamedEventsWithNamedAttributes,
+        NamedEventsWithNamedAttributes = 1024,
         
         /// <summary>
         /// Set a global tracking attribute to include in all tracked events
         /// </summary>
-        SetGlobalEventAttribute,
+        SetGlobalEventAttribute = 2048,
         
         /// <summary>
         /// Set a global tracking attribute to include in all tracked events, but only if the attribute
         /// was not yet set since the last initialize
         /// </summary>
-        SetGlobalEventAttributeOnce,
+        SetGlobalEventAttributeOnce = 4096,
         
         /// <summary>
         /// Tracking transaction revenue
         /// </summary>
-        RevenueTracking,
+        RevenueTracking = 8192,
     }
     
     /// <summary>
