@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using DeBox.PlayerPrefsExtensions;
 using Newtonsoft.Json;
@@ -269,6 +270,16 @@ namespace DeBox.Analytics.DebugManager
         {
             var data = _playerDataStore.Value;
             _playerData = JsonConvert.DeserializeObject<Dictionary<string, object>>(data);
+            var keys = _playerData.Keys.ToArray();
+            foreach (var k in keys)
+            {
+                var v = _playerData[k];
+                if (v.GetType() == typeof(Newtonsoft.Json.Linq.JArray))
+                {
+                    v = ((Newtonsoft.Json.Linq.JArray)v).ToObject<List<object>>();
+                    _playerData[k] = v;
+                }
+            }
         }
 
         private void StorePlayerData()

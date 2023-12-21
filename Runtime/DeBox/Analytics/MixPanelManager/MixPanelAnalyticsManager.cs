@@ -104,7 +104,7 @@ namespace DeBox.Analytics.MixPanelManager
         /// <exception cref="NotImplementedException"></exception>
         public override  void UnionList(string attribute, params object[] values)
         {
-            throw new NotImplementedException();
+            Mixpanel.People.Union(attribute, ObjectToValue(values));
         }
 
         /// <summary>
@@ -258,7 +258,8 @@ namespace DeBox.Analytics.MixPanelManager
                    AnalyticsFeatureType.AccountAddToList |
                    AnalyticsFeatureType.SetGlobalEventAttribute | 
                    AnalyticsFeatureType.NamedEventsWithNamedAttributes |
-                   AnalyticsFeatureType.SetGlobalEventAttributeOnce;
+                   AnalyticsFeatureType.SetGlobalEventAttributeOnce
+                   | AnalyticsFeatureType.AccountUnionList;
         }
     }
 }
